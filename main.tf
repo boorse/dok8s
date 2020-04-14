@@ -27,9 +27,11 @@ module "do" {
 resource "local_file" "kubeconfig" {
   depends_on = [module.do]
   content    = module.do.kubeconfig
-  filename   = "./terraform.tfstate.helmprovider.kubeconfig"
+  filename   = "./kubeconfig"
 }
 
+# this is essentially a hack, given the way providers are handled in terraform.
+# see this: https://github.com/hashicorp/terraform/issues/2430#issuecomment-370685911
 provider "helm" {
   kubernetes {
     config_path = local_file.kubeconfig.filename
@@ -77,4 +79,9 @@ resource "helm_release" "externaldns" {
     name  = "policy"
     value = "sync"
   }
+}
+
+output "kubeconfig" {
+  value       = module.do.kubeconfig
+  description = "Kubeconfig file contents"
 }
