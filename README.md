@@ -6,12 +6,15 @@ Resources created:
 
 - DigitalOcean Kubernetes cluster with a configurable name, region, node droplet size, and number of nodes
 - Helm charts for [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) and [external-dns](https://github.com/helm/charts/tree/master/stable/external-dns)
+- Helm charts and Kubernetes custom resources for [cert-manager](https://cert-manager.io/)
 
 This accomplishes the setup steps from these two tutorials on DigitalOcean: [here](https://www.digitalocean.com/community/tutorials/how-to-automatically-manage-dns-records-from-digitalocean-kubernetes-using-externaldns) and [here](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-on-digitalocean-kubernetes-using-helm)
 
 ## Prerequisites
 
 In order for this to work, you will need to [generate a DigitalOcean API Token](https://www.digitalocean.com/docs/apis-clis/api/create-personal-access-token/) and have it handy.
+
+You will also need to have `terraform-provider-k8s` installed (pay attention: not the default Kubernetes Terraform provider). See installation instructions [on GitHub here](https://github.com/banzaicloud/terraform-provider-k8s).
 
 ## Instructions
 

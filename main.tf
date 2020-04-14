@@ -23,7 +23,6 @@ variable "cluster_region" {
   description = "Region to create cluster inside."
 }
 
-
 provider "digitalocean" {
   token = var.do_token
 }
@@ -92,6 +91,44 @@ resource "helm_release" "externaldns" {
     value = "sync"
   }
 }
+
+provider "k8s" {
+  config_path = local_file.kubeconfig.filename
+}
+
+provider "kubernetes" {
+  config_path = local_file.kubeconfig.filename
+}
+
+resource "kubernetes_namespace" "certmanagernamespace" {
+  depends_on = [helm_release.externaldns]
+  metadata {
+    name = "cert-manager"
+  }
+}
+
+resource "k8s_manifest" "certmanager" {
+  content    = file("./include/cert-manager.crds.yaml")
+  depends_on = [helm_release.externaldns]
+}
+
+data "helm_repository" "jetstack" {
+  name = "jetstack"
+  url  = "https://charts.jetstack.io"
+}
+
+resource "helm_release" "certmanager" {
+  name       = "cert-manager"
+  repository = data.helm_repository.jetstack.metadata[0].name
+  chart      = "cert-manager"
+  namespace  = kubernetes_namespace.certmanagernamespace.metadata[0].name
+  depends_on = [
+    k8s_manifest.certmanager,
+    kubernetes_namespace.certmanagernamespace
+  ]
+  version = "v0.14.1"
+}
+
 
 output "kubeconfig" {
   value       = module.do.kubeconfig
