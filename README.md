@@ -47,6 +47,8 @@ cp ./kubeconfig ~/.kube/config
 kubectl get all 
 ```
 
+It is worth mentioning here that (according to the [Known Issues page](https://www.digitalocean.com/docs/kubernetes/#known-issues) for DigitalOcean Kubernetes) this kubeconfig file will expire after 7 days. Due to this, it is suggested to follow the [steps in this tutorial](https://www.digitalocean.com/docs/kubernetes/how-to/connect-to-cluster/) to connect to your cluster instead of regenerating this kubeconfig file every week.
+
 ## Input Variables
 
 The following variables are used to configure Terraform. They can be passed into the `terraform apply` command using the `-var` flag.
